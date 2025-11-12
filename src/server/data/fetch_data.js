@@ -1,9 +1,10 @@
 import axios from "axios";
 import Papa from "papaparse";
 import { API_CONFIG } from "../constants/CONSTANTS.js";
+import config from "../../../config.js";
 
 export const fetchRegionData = async (regionName, coordinates) => {
-  const URL = `${API_CONFIG.BASE_URL}/${API_CONFIG.MAP_KEY}/${API_CONFIG.SOURCE}/${coordinates}/${API_CONFIG.DURATION}`;
+  const URL = `${API_CONFIG.BASE_URL}/${config.MAP_KEY}/${API_CONFIG.SOURCE}/${coordinates}/${API_CONFIG.DURATION}`;
 
   const response = await axios.get(URL);
   if (!response.data) {

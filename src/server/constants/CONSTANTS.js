@@ -1,5 +1,4 @@
 export const API_CONFIG = {
-  MAP_KEY: "61c472b0131e58442739847502a8047d",
   DURATION: 2, //LAST 24 HOURS
   SOURCE: "VIIRS_SNPP_NRT",
   BASE_URL: "https://firms.modaps.eosdis.nasa.gov/api/area/csv",
