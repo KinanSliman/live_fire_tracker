@@ -4,9 +4,12 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFireData } from "../app/fireSlice";
 import MapStyleSelector from "./MapStyleSelector";
-import { MAPTILER_KEY, MAPTILER_STYLES } from "./mapTilerStyles.js";
+import { MAPTILER_STYLES } from "./mapTilerStyles.js";
 import Info from "./Info.jsx";
 import FireDetails from "./FireDetails.jsx";
+import config from "./config.js";
+
+const MAPTILLER_KEY = config.MAPTILER_KEY;
 
 export default function Map({ onMapMove }) {
   const mapContainer = useRef(null);
