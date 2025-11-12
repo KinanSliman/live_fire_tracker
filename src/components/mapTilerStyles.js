@@ -1,4 +1,4 @@
-import config from "../../config";
+import config from "./config";
 
 export const MAPTILER_KEY = config.MAPTILER_KEY;
 
