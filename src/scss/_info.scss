@@ -1,0 +1,100 @@
+.info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 22%;
+  min-width: 14rem;
+  height: 15rem;
+  background-color: rgba(34, 20, 16, 0.8);
+  z-index: 10;
+  padding: 1rem 1rem;
+  border-radius: 4px;
+
+  h3 {
+    color: rgb(252, 252, 255);
+    text-align: center;
+  }
+
+  &__markers {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    border-bottom: 1px solid white;
+    gap: 0.4rem;
+
+    .item {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.7rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 4px 8px;
+      border-radius: 4px;
+
+      &.active {
+        background-color: rgba(255, 255, 255, 0.1);
+
+        .first_point {
+          background-color: rgb(41, 226, 41); // Bright green when active
+        }
+        .second_point {
+          background-color: rgb(255, 128, 9); // Bright orange when active
+        }
+        .third_point {
+          background-color: rgb(255, 21, 21); // Bright red when active
+        }
+      }
+
+      &.inactive {
+        opacity: 0.6;
+
+        .first_point {
+          background-color: rgb(20, 113, 20); // Dark green when inactive
+        }
+        .second_point {
+          background-color: rgb(179, 89, 6); // Dark orange when inactive
+        }
+        .third_point {
+          background-color: rgb(179, 15, 15); // Dark red when inactive
+        }
+
+        p {
+          color: rgba(252, 252, 255, 0.7); // Faded text when inactive
+        }
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      p {
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .first_point {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+      }
+      .second_point {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+      }
+      .third_point {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+      }
+    }
+  }
+}

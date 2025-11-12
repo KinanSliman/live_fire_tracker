@@ -1,0 +1,280 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+p {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 22%;
+  min-width: 14rem;
+  height: 15rem;
+  background-color: rgba(34, 20, 16, 0.8);
+  z-index: 10;
+  padding: 1rem 1rem;
+  border-radius: 4px;
+}
+.info h3 {
+  color: rgb(252, 252, 255);
+  text-align: center;
+}
+.info__markers {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border-bottom: 1px solid white;
+  gap: 0.4rem;
+}
+.info__markers .item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.info__markers .item.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.info__markers .item.active .first_point {
+  background-color: rgb(41, 226, 41);
+}
+.info__markers .item.active .second_point {
+  background-color: rgb(255, 128, 9);
+}
+.info__markers .item.active .third_point {
+  background-color: rgb(255, 21, 21);
+}
+.info__markers .item.inactive {
+  opacity: 0.6;
+}
+.info__markers .item.inactive .first_point {
+  background-color: rgb(20, 113, 20);
+}
+.info__markers .item.inactive .second_point {
+  background-color: rgb(179, 89, 6);
+}
+.info__markers .item.inactive .third_point {
+  background-color: rgb(179, 15, 15);
+}
+.info__markers .item.inactive p {
+  color: rgba(252, 252, 255, 0.7);
+}
+.info__markers .item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.info__markers .item p {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.info__markers .item .first_point {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+.info__markers .item .second_point {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+.info__markers .item .third_point {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.home {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-image: url("../assets/images/panorama.jpg");
+  background-size: auto 110%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  transition: background-position 0.3s ease-out, background-size 0.5s ease-out;
+}
+.home .map-container {
+  position: relative;
+  z-index: 1;
+}
+
+.fireDetails {
+  position: absolute;
+  width: 100%;
+  bottom: 1%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+.fireDetails__data {
+  position: relative;
+  height: auto;
+  min-height: 12rem;
+  width: 100%;
+  max-width: 45rem;
+  background-color: rgba(34, 20, 16, 0.95);
+  border-radius: 8px;
+  z-index: 100;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.fireDetails__data .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.fireDetails__data .head__location {
+  flex: 1;
+}
+.fireDetails__data .head__location h4 {
+  color: #fff;
+  font-size: 1.4rem;
+  margin: 0 0 0.3rem 0;
+  font-weight: 600;
+}
+.fireDetails__data .head__location .loading-text {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin: 0;
+  font-style: italic;
+}
+.fireDetails__data .head__location .full-address {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.2rem 0 0 0;
+  font-style: italic;
+}
+.fireDetails__data .head .severity {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  width: 8rem;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  margin: 0;
+  text-transform: capitalize;
+}
+.fireDetails__data .head .severity.low {
+  background: linear-gradient(135deg, rgb(41, 226, 41), rgb(30, 180, 30));
+}
+.fireDetails__data .head .severity.medium {
+  background: linear-gradient(135deg, rgb(255, 128, 9), rgb(220, 110, 0));
+}
+.fireDetails__data .head .severity.high {
+  background: linear-gradient(135deg, rgb(255, 21, 21), rgb(220, 0, 0));
+}
+.fireDetails__data .body {
+  padding: 0.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+.fireDetails__data .body__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.8rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+.fireDetails__data .body__item:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.fireDetails__data .body__item p {
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+.fireDetails__data .body__item p:first-child {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.fireDetails__data .body__item p:last-child {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.fireDetails__data .closeBTN {
+  position: absolute;
+  top: 0;
+  right: 1%;
+  border: none;
+  color: rgb(218, 204, 204);
+  padding: 2px 2px;
+  border-radius: 3px;
+  font-size: 2rem;
+  background-color: rgba(34, 20, 16, 0.95);
+}
+.fireDetails__data .closeBTN:hover {
+  cursor: pointer;
+  color: red;
+}
+
+@media (max-width: 768px) {
+  .fireDetails {
+    padding: 0 0.5rem;
+  }
+  .fireDetails__data .body {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+}
+@media (max-width: 480px) {
+  .fireDetails__data {
+    padding: 1rem;
+  }
+  .fireDetails__data .body {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  .fireDetails__data .head {
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: center;
+  }
+  .fireDetails__data .head__location {
+    text-align: center;
+  }
+  .fireDetails__data .head .severity {
+    width: 100%;
+    max-width: 10rem;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
