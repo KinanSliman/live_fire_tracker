@@ -16,6 +16,7 @@ app.use(Cors());
 app.use(express.json());
 
 let isInitiateRunning = false;
+let totalData = [];
 
 // Route to get all data
 app.get("/getalldata", async (req, res) => {
@@ -47,6 +48,7 @@ const initiate = async () => {
   }
 
   isInitiateRunning = true;
+  totalData = [];
   console.log("🚀 Starting data fetch cycle...");
 
   try {
@@ -70,6 +72,8 @@ const initiate = async () => {
         );
 
         await storeData(regionData, regionName);
+        totalData.push(...regionData);
+        console.log("total fetched data totalData= ", totalData.length);
       } else {
         console.log(`⚠️ No fire data for ${regionName}`);
       }
