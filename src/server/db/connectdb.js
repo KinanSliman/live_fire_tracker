@@ -32,7 +32,7 @@ export const storeData = async (data, regionName) => {
         region: regionName,
         severity: d.frp < 30 ? "low" : d.frp < 50 ? "medium" : "high", // your categories
       }))
-      .filter((d) => d.frp >= 20); // ignore FRPs smaller than 20
+      .filter((d) => d.frp >= 10); // ignore FRPs smaller than 20
 
     // Clear only previous data for this region
     await collection.deleteMany({ region: regionName });
