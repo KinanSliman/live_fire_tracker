@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  DURATION: 1, //LAST 24 HOURS
+  DURATION: 4, //LAST 4 days
   SOURCE: "VIIRS_SNPP_NRT",
   BASE_URL: "https://firms.modaps.eosdis.nasa.gov/api/area/csv",
 };
