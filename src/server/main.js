@@ -101,7 +101,7 @@ const startServer = async () => {
     console.log(`🕒 Scheduled data fetch every 3 hours (${THREE_HOURS_MS} ms)`);
 
     // 🧹 Schedule DB cleanup every 24 hours
-    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000 * 2;
     setInterval(clearDatabase, ONE_DAY_MS);
     console.log(
       `🧼 Scheduled database cleanup every 24 hours (${ONE_DAY_MS} ms)`
