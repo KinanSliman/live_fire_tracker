@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "https://live-wildfire-tracker.onrender.com:4200/getalldata";
+const API_URL = "https://live-wildfire-tracker.onrender.com/getalldata";
 
 export const fetchFireData = createAsyncThunk(
   "fire/fetchFireData",
