@@ -52,8 +52,17 @@ const initiate = async () => {
   console.log("🚀 Starting data fetch cycle...");
 
   try {
-    for (const [regionName, coordinates] of Object.entries(COUNTRY_BOUNDS)) {
-      console.log(`📡 Fetching data for ${regionName}...`);
+    // 🆕 Get regions as an array and store the length
+    const regions = Object.entries(COUNTRY_BOUNDS);
+    const totalRegions = regions.length;
+
+    // 🆕 Use for...loop with index tracking
+    for (let index = 0; index < totalRegions; index++) {
+      const [regionName, coordinates] = regions[index];
+
+      console.log(
+        `📡 [${index + 1}/${totalRegions}] Fetching data for ${regionName}...`
+      );
       const regionData = await fetchRegionData(regionName, coordinates);
       console.log(`✅ Fetched ${regionData.length} records for ${regionName}`);
 
@@ -76,6 +85,12 @@ const initiate = async () => {
         console.log("total fetched data totalData= ", totalData.length);
       } else {
         console.log(`⚠️ No fire data for ${regionName}`);
+      }
+
+      // 🕐 Add 10-second delay between regions (except after the last one)
+      if (index < totalRegions - 1) {
+        console.log(`⏳ Waiting 10 seconds before next region...`);
+        await new Promise((resolve) => setTimeout(resolve, 10000));
       }
     }
 
