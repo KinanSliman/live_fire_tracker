@@ -38,10 +38,13 @@ export const storeData = async (data, regionName) => {
     await collection.deleteMany({ region: regionName });
 
     // Insert fresh updated data
-    await collection.insertMany(taggedData);
-
-    console.log(`✅ Data stored successfully for region: ${regionName}`);
-    console.log(`Stored ${taggedData.length} records for ${regionName}`);
+    if (taggedData.length > 0) {
+      await collection.insertMany(taggedData);
+      console.log(`✅ Data stored successfully for region: ${regionName}`);
+      console.log(`Stored ${taggedData.length} records for ${regionName}`);
+    } else {
+      console.log(`⚠️ No records to insert for region: ${regionName}`);
+    }
   } catch (err) {
     console.error("❌ Error storing data:", err);
   }
