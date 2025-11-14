@@ -1,11 +1,6 @@
 import { fetchRegionData } from "./data/fetch_data.js";
 import COUNTRY_BOUNDS from "./constants/CONSTANTS.js";
-import {
-  connectToDB,
-  storeData,
-  getFireData,
-  minMaxFRP,
-} from "./db/connectdb.js";
+
 import express from "express";
 import Cors from "cors";
 
@@ -22,24 +17,13 @@ let totalData = [];
 app.get("/getalldata", async (req, res) => {
   console.log("/getalldata route is triggered");
   try {
-    const result = await getFireData();
+    const result = totalData;
     res.json(result);
   } catch (err) {
     console.log("err getting data:", err);
     res.status(500).json({ error: "Failed to fetch data" });
   }
 });
-
-// 🧹 NEW FUNCTION: Clear all data from DB
-const clearDatabase = async () => {
-  try {
-    const collection = await connectToDB();
-    const result = await collection.deleteMany({});
-    console.log(`🧹 Cleared ${result.deletedCount} records from database`);
-  } catch (error) {
-    console.error("❌ Error clearing database:", error);
-  }
-};
 
 const initiate = async () => {
   if (isInitiateRunning) {
@@ -67,8 +51,18 @@ const initiate = async () => {
       console.log(`✅ Fetched ${regionData.length} records for ${regionName}`);
 
       if (regionData.length > 0) {
+        // Apply the same filtering logic as storeData function
+        const filteredData = regionData
+          .map((d) => ({
+            ...d,
+            frp: Number(d.frp), // Convert to number
+            region: regionName,
+            severity: d.frp < 30 ? "low" : d.frp < 50 ? "medium" : "high",
+          }))
+          .filter((d) => d.frp >= 20); // Ignore FRPs smaller than 20
+
         const dataSizeBytes = Buffer.byteLength(
-          JSON.stringify(regionData),
+          JSON.stringify(filteredData),
           "utf8"
         );
         const dataSizeKB = dataSizeBytes / 1024;
@@ -80,8 +74,7 @@ const initiate = async () => {
           )} KB / ${dataSizeMB.toFixed(4)} MB)`
         );
 
-        await storeData(regionData, regionName);
-        totalData.push(...regionData);
+        totalData.push(...filteredData); // Push filtered data instead of raw regionData
         console.log("total fetched data totalData= ", totalData.length);
       } else {
         console.log(`⚠️ No fire data for ${regionName}`);
@@ -89,15 +82,12 @@ const initiate = async () => {
 
       // 🕐 Add 10-second delay between regions (except after the last one)
       if (index < totalRegions - 1) {
-        console.log(`⏳ Waiting 10 seconds before next region...`);
-        await new Promise((resolve) => setTimeout(resolve, 10000));
+        console.log(`⏳ Waiting 2 seconds before next region...`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     }
 
     console.log("🎉 All regions processed successfully");
-
-    const { minFRP, maxFRP } = await minMaxFRP();
-    console.log(`🔥 Min FRP: ${minFRP}, Max FRP: ${maxFRP}`);
   } catch (error) {
     console.error("❌ Error in initiate function:", error);
   } finally {
@@ -108,9 +98,6 @@ const initiate = async () => {
 // Start the server
 const startServer = async () => {
   try {
-    await connectToDB();
-    console.log("✅ Connected to database");
-
     // Run initial data fetch
     await initiate();
 
@@ -118,13 +105,6 @@ const startServer = async () => {
     const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
     setInterval(initiate, THREE_HOURS_MS);
     console.log(`🕒 Scheduled data fetch every 3 hours (${THREE_HOURS_MS} ms)`);
-
-    // 🧹 Schedule DB cleanup every 24 hours
-    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-    setInterval(clearDatabase, ONE_DAY_MS);
-    console.log(
-      `🧼 Scheduled database cleanup every 24 hours (${ONE_DAY_MS} ms)`
-    );
 
     // Start Express server
     app.listen(PORT, () => {

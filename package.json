@@ -18,14 +18,12 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "maplibre-gl": "^5.11.0",
-    "mongodb": "^6.20.0",
     "papaparse": "^5.5.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
-    "sass": "^1.93.3",
-    "ws": "^8.18.3"
+    "sass": "^1.93.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
