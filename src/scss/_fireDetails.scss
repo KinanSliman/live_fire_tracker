@@ -163,6 +163,8 @@
 
 @media (max-width: 480px) {
   .fireDetails {
+    top: 10%;
+    bottom: auto;
     &__data {
       padding: 1rem;
 

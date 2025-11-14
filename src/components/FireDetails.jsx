@@ -65,8 +65,11 @@ export default function FireDetails({ fire, onClose }) {
   // Estimate fire size based on FRP (Fire Radiative Power)
   const estimateFireSize = (frp) => {
     if (!frp) return "Unknown";
+
     const sizeInAcres = Math.round(frp * 2.5);
-    return `${sizeInAcres} Acre${sizeInAcres !== 1 ? "s" : ""}`;
+    const sizeInKm2 = Math.round(sizeInAcres * 0.00404686 * 100) / 100;
+
+    return `${sizeInKm2} km²`;
   };
 
   // Get display location name

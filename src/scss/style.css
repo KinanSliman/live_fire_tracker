@@ -256,6 +256,10 @@ h5 {
   }
 }
 @media (max-width: 480px) {
+  .fireDetails {
+    top: 10%;
+    bottom: auto;
+  }
   .fireDetails__data {
     padding: 1rem;
   }

@@ -74,8 +74,11 @@ export default function Map({ onMapMove }) {
     onMapMove(center.lng, center.lat, zoom, pitch, bearing);
   }, [onMapMove]);
 
+  // Only fetch if we don't have data AND we're not loading
   useEffect(() => {
-    dispatch(fetchFireData());
+    if (status === "idle" && fireData.length === 0) {
+      dispatch(fetchFireData());
+    }
   }, [dispatch, fireData.length, status]);
 
   // Initialize map once
@@ -117,10 +120,6 @@ export default function Map({ onMapMove }) {
     map.current.on("rotate", throttledEmitMovement);
     map.current.on("zoom", throttledEmitMovement);
     map.current.on("pitch", throttledEmitMovement);
-  };
-
-  const apply3DEffects = (styleObj) => {
-    // ... (keep your existing apply3DEffects code)
   };
 
   const removeFireLayers = () => {
@@ -241,15 +240,6 @@ export default function Map({ onMapMove }) {
       });
 
       console.log("Fire layer added successfully with filters");
-
-      // Force map to re-render
-      setTimeout(() => {
-        if (map.current) {
-          const center = map.current.getCenter();
-          map.current.setCenter(center);
-          console.log("Forced map refresh after filtering");
-        }
-      }, 100);
     } catch (error) {
       console.error("Error adding fire points:", error);
     }
@@ -270,10 +260,6 @@ export default function Map({ onMapMove }) {
     // Use 'idle' event instead of 'style.load' - this ensures the style is fully loaded and rendered
     map.current.once("idle", () => {
       console.log("New style fully loaded and idle:", newStyle);
-
-      if (styleObj.type === "3d") {
-        apply3DEffects(styleObj);
-      }
 
       // Re-add fire points after style is fully loaded and idle
       if (fireData?.length) {
