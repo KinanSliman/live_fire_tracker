@@ -74,11 +74,8 @@ export default function Map({ onMapMove }) {
     onMapMove(center.lng, center.lat, zoom, pitch, bearing);
   }, [onMapMove]);
 
-  // Only fetch if we don't have data AND we're not loading
   useEffect(() => {
-    if (status === "idle" && fireData.length === 0) {
-      dispatch(fetchFireData());
-    }
+    dispatch(fetchFireData());
   }, [dispatch, fireData.length, status]);
 
   // Initialize map once
