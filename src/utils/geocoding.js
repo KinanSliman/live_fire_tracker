@@ -4,13 +4,11 @@ const geocodingCache = new Map();
 export const reverseGeocode = async (lat, lng) => {
   const cacheKey = `${Number(lat).toFixed(4)},${Number(lng).toFixed(4)}`;
 
-  // Check cache first
   if (geocodingCache.has(cacheKey)) {
     return geocodingCache.get(cacheKey);
   }
 
   try {
-    // Add delay to respect Nominatim's usage policy (max 1 request per second)
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const response = await fetch(
@@ -39,7 +37,6 @@ export const reverseGeocode = async (lat, lng) => {
         rawAddress: address,
       };
 
-      // Cache the result
       geocodingCache.set(cacheKey, locationInfo);
       return locationInfo;
     }

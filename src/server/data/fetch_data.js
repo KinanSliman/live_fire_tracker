@@ -14,7 +14,7 @@ export const fetchRegionData = async (regionName, coordinates) => {
   console.log("converting CSV to JSON format");
   const parsedResponse = Papa.parse(response.data, {
     header: true,
-    delimiter: ",", // explicitly tell Papa to use comma
+    delimiter: ",",
     skipEmptyLines: true,
 
     error: (err) => {

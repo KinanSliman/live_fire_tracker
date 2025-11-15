@@ -15,7 +15,6 @@ export default function Info({ onFilterChange }) {
 
     setActiveFilters(newFilters);
 
-    // Notify parent component about filter changes
     if (onFilterChange) {
       onFilterChange(newFilters);
     }

@@ -1,12 +1,11 @@
-// app/store.js
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import sessionStorage from "redux-persist/lib/storage/session"; // Use sessionStorage
+import sessionStorage from "redux-persist/lib/storage/session";
 import fireReducer from "./fireSlice";
 
 const persistConfig = {
   key: "fire",
-  storage: sessionStorage, // This will clear on browser close
+  storage: sessionStorage,
   whitelist: ["fireData"],
 };
 

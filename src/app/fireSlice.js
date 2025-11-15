@@ -1,4 +1,3 @@
-// app/fireSlice.js - Back to original simple version
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -27,7 +26,6 @@ const fireSlice = createSlice({
     error: null,
   },
   reducers: {
-    // Optional: Clear cached data if needed
     clearFireData: (state) => {
       state.fireData = [];
     },

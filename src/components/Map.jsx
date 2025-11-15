@@ -24,19 +24,16 @@ export default function Map({ onMapMove }) {
     medium: true,
     high: true,
   });
-  const [selectedFire, setSelectedFire] = useState(null); // Track selected fire
+  const [selectedFire, setSelectedFire] = useState(null);
 
-  // Handle fire point clicks
   const handleFireClick = useCallback((fire) => {
     setSelectedFire(fire);
   }, []);
 
-  // Handle closing fire details
   const handleCloseFireDetails = useCallback(() => {
     setSelectedFire(null);
   }, []);
 
-  // Throttle function to limit event frequency
   const throttle = useCallback((func, limit) => {
     let inThrottle;
     return function (...args) {
@@ -48,11 +45,10 @@ export default function Map({ onMapMove }) {
     };
   }, []);
 
-  // Handle filter changes from Info component
   const handleFilterChange = useCallback(
     (filters) => {
       setActiveFilters(filters);
-      // Re-apply fire points with new filters
+
       if (mapLoaded && fireData?.length) {
         setTimeout(() => {
           addFirePoints(filters);
@@ -62,7 +58,6 @@ export default function Map({ onMapMove }) {
     [mapLoaded, fireData]
   );
 
-  // Emit map movement data to parent
   const emitMapMovement = useCallback(() => {
     if (!map.current || !onMapMove) return;
 
@@ -74,14 +69,12 @@ export default function Map({ onMapMove }) {
     onMapMove(center.lng, center.lat, zoom, pitch, bearing);
   }, [onMapMove]);
 
-  // Only fetch if we don't have data AND we're not loading
   useEffect(() => {
     if (status === "idle" && fireData.length === 0) {
       dispatch(fetchFireData());
     }
   }, [dispatch, fireData.length, status]);
 
-  // Initialize map once
   useEffect(() => {
     if (map.current) return;
 
@@ -101,7 +94,6 @@ export default function Map({ onMapMove }) {
       antialias: true,
     });
 
-    // Throttled version of emitMapMovement
     const throttledEmitMovement = throttle(emitMapMovement, 50);
 
     map.current.on("load", () => {
@@ -111,11 +103,9 @@ export default function Map({ onMapMove }) {
       }
       setMapLoaded(true);
 
-      // Emit initial position
       emitMapMovement();
     });
 
-    // Add event listeners for map movement
     map.current.on("move", throttledEmitMovement);
     map.current.on("rotate", throttledEmitMovement);
     map.current.on("zoom", throttledEmitMovement);
@@ -137,7 +127,6 @@ export default function Map({ onMapMove }) {
     }
   };
 
-  // Updated addFirePoints to accept filters and add click handlers
   const addFirePoints = (filters = activeFilters) => {
     if (!map.current || !fireData?.length) {
       console.log("Cannot add fire points - missing map or data");
@@ -147,19 +136,18 @@ export default function Map({ onMapMove }) {
     try {
       removeFireLayers();
 
-      // Validate data and apply filters
       const validFireData = fireData.filter(
         (f) =>
           f.longitude != null &&
           f.latitude != null &&
           !isNaN(Number(f.longitude)) &&
           !isNaN(Number(f.latitude)) &&
-          filters[f.severity] // Filter by severity
+          filters[f.severity]
       );
 
       if (validFireData.length === 0) {
         console.warn("No valid coordinates in fire data after filtering");
-        // Remove existing layers if no data matches filters
+
         removeFireLayers();
         return;
       }
@@ -175,11 +163,11 @@ export default function Map({ onMapMove }) {
             coordinates: [Number(f.longitude), Number(f.latitude)],
           },
           properties: {
-            id: f._id, // Add ID for reference
+            id: f._id,
             severity: f.severity,
             date: f.acq_date,
             region: f.region,
-            // Include all data for click events
+
             ...f,
           },
         })),
@@ -210,13 +198,11 @@ export default function Map({ onMapMove }) {
         },
       });
 
-      // Add click event listener for fire points
       map.current.on("click", "fires-layer", (e) => {
         if (e.features && e.features.length > 0) {
           const fireFeature = e.features[0];
-          const fireProperties = fireFeature.properties; // Renamed to avoid conflict
+          const fireProperties = fireFeature.properties;
 
-          // Find the original fire data from the Redux fireData array
           const originalFire = fireData.find(
             (f) => f._id === fireProperties.id
           );
@@ -224,13 +210,11 @@ export default function Map({ onMapMove }) {
           if (originalFire) {
             handleFireClick(originalFire);
           } else {
-            // Fallback: use the properties from the GeoJSON if original not found
             handleFireClick(fireProperties);
           }
         }
       });
 
-      // Change cursor to pointer when hovering over fires
       map.current.on("mouseenter", "fires-layer", () => {
         map.current.getCanvas().style.cursor = "pointer";
       });
@@ -244,7 +228,7 @@ export default function Map({ onMapMove }) {
       console.error("Error adding fire points:", error);
     }
   };
-  // Coordinated style change handler
+
   const handleStyleChange = (newStyle) => {
     if (!map.current) return;
 
@@ -252,16 +236,13 @@ export default function Map({ onMapMove }) {
     const styleObj = MAPTILER_STYLES.find((s) => s.value === newStyle);
     if (!styleObj) return;
 
-    // Remove existing fire layers before style change
     removeFireLayers();
 
     map.current.setStyle(styleObj.url);
 
-    // Use 'idle' event instead of 'style.load' - this ensures the style is fully loaded and rendered
     map.current.once("idle", () => {
       console.log("New style fully loaded and idle:", newStyle);
 
-      // Re-add fire points after style is fully loaded and idle
       if (fireData?.length) {
         console.log("Re-adding fire points after style change");
         addFirePoints(activeFilters);
@@ -269,7 +250,6 @@ export default function Map({ onMapMove }) {
     });
   };
 
-  // Add fire points when data loads and map is ready
   useEffect(() => {
     if (mapLoaded && fireData?.length) {
       console.log(
@@ -281,20 +261,16 @@ export default function Map({ onMapMove }) {
         addFirePoints(activeFilters);
       };
 
-      // Remove any existing listeners
       map.current.off("idle", addPointsWhenIdle);
 
-      // Wait for map to be completely idle
       if (map.current.isMoving() || map.current.isZooming()) {
         map.current.once("idle", addPointsWhenIdle);
       } else {
-        // If already idle, add points immediately
         addPointsWhenIdle();
       }
     }
   }, [fireData, mapLoaded, activeFilters]);
 
-  // Clean up event listeners
   useEffect(() => {
     return () => {
       if (map.current) {

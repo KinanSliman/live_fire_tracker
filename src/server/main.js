@@ -36,11 +36,9 @@ const initiate = async () => {
   console.log("🚀 Starting data fetch cycle...");
 
   try {
-    // 🆕 Get regions as an array and store the length
     const regions = Object.entries(COUNTRY_BOUNDS);
     const totalRegions = regions.length;
 
-    // 🆕 Use for...loop with index tracking
     for (let index = 0; index < totalRegions; index++) {
       const [regionName, coordinates] = regions[index];
 
@@ -51,15 +49,14 @@ const initiate = async () => {
       console.log(`✅ Fetched ${regionData.length} records for ${regionName}`);
 
       if (regionData.length > 0) {
-        // Apply the same filtering logic as storeData function
         const filteredData = regionData
           .map((d) => ({
             ...d,
-            frp: Number(d.frp), // Convert to number
+            frp: Number(d.frp),
             region: regionName,
             severity: d.frp < 30 ? "low" : d.frp < 50 ? "medium" : "high",
           }))
-          .filter((d) => d.frp >= 20); // Ignore FRPs smaller than 20
+          .filter((d) => d.frp >= 20);
 
         const dataSizeBytes = Buffer.byteLength(
           JSON.stringify(filteredData),
@@ -74,13 +71,12 @@ const initiate = async () => {
           )} KB / ${dataSizeMB.toFixed(4)} MB)`
         );
 
-        totalData.push(...filteredData); // Push filtered data instead of raw regionData
+        totalData.push(...filteredData);
         console.log("total fetched data totalData= ", totalData.length);
       } else {
         console.log(`⚠️ No fire data for ${regionName}`);
       }
 
-      // 🕐 Add 10-second delay between regions (except after the last one)
       if (index < totalRegions - 1) {
         console.log(`⏳ Waiting 2 seconds before next region...`);
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -95,18 +91,14 @@ const initiate = async () => {
   }
 };
 
-// Start the server
 const startServer = async () => {
   try {
-    // Run initial data fetch
     await initiate();
 
-    // 🔁 Schedule new data every 3 hours
     const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
     setInterval(initiate, THREE_HOURS_MS);
     console.log(`🕒 Scheduled data fetch every 3 hours (${THREE_HOURS_MS} ms)`);
 
-    // Start Express server
     app.listen(PORT, () => {
       console.log(`🚀 Express server running on port ${PORT}`);
     });

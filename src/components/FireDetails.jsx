@@ -26,12 +26,10 @@ export default function FireDetails({ fire, onClose }) {
     }
   };
 
-  // Don't render anything if no fire is selected
   if (!fire) {
     return null;
   }
 
-  // Format date and time
   const formatDateTime = (dateString, timeString) => {
     try {
       const date = new Date(dateString);
@@ -41,7 +39,6 @@ export default function FireDetails({ fire, onClose }) {
         day: "numeric",
       });
 
-      // Format time (timeString is in format "102" meaning 01:02)
       const time = String(timeString).padStart(4, "0");
       const hours = time.substring(0, 2);
       const minutes = time.substring(2, 4);
@@ -53,7 +50,6 @@ export default function FireDetails({ fire, onClose }) {
     }
   };
 
-  // Format region name as fallback
   const formatRegion = (region) => {
     if (!region) return "Unknown Location";
     return region
@@ -62,7 +58,6 @@ export default function FireDetails({ fire, onClose }) {
       .join(" ");
   };
 
-  // Estimate fire size based on FRP (Fire Radiative Power)
   const estimateFireSize = (frp) => {
     if (!frp) return "Unknown";
 
@@ -72,7 +67,6 @@ export default function FireDetails({ fire, onClose }) {
     return `${sizeInKm2} km²`;
   };
 
-  // Get display location name
   const getDisplayLocation = () => {
     if (locationInfo) {
       if (locationInfo.city && locationInfo.country) {
@@ -95,7 +89,6 @@ export default function FireDetails({ fire, onClose }) {
   return (
     <div className="fireDetails">
       <div className="fireDetails__data">
-        {/* Close Button */}
         <button className="closeBTN" onClick={handleClose}>
           ×
         </button>

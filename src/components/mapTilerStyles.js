@@ -3,7 +3,6 @@ import config from "./config";
 export const MAPTILER_KEY = config.MAPTILER_KEY;
 
 export const MAPTILER_STYLES = [
-  // 2D Styles
   {
     value: "collored_3d",
     label: " 3D ",
