@@ -1,29 +1,14 @@
 import { fetchRegionData } from "./data/fetch_data.js";
 import COUNTRY_BOUNDS from "./constants/CONSTANTS.js";
-
-import express from "express";
-import Cors from "cors";
-
-const PORT = 4200;
-const app = express();
-
-app.use(Cors());
-app.use(express.json());
+import {
+  start_ws_server,
+  broadcastDataUpdate,
+  updateDataReference,
+} from "./ws/ws_server.js";
 
 let isInitiateRunning = false;
 let totalData = [];
-
-// Route to get all data
-app.get("/getalldata", async (req, res) => {
-  console.log("/getalldata route is triggered");
-  try {
-    const result = totalData;
-    res.json(result);
-  } catch (err) {
-    console.log("err getting data:", err);
-    res.status(500).json({ error: "Failed to fetch data" });
-  }
-});
+let lastUpdateTime = null; // Add this to track last update
 
 const initiate = async () => {
   if (isInitiateRunning) {
@@ -83,7 +68,14 @@ const initiate = async () => {
       }
     }
 
+    // Update the last update time
+    lastUpdateTime = new Date().toISOString();
     console.log("🎉 All regions processed successfully");
+    console.log(`🕒 Last update time: ${lastUpdateTime}`);
+
+    // Broadcast data update to all connected WebSocket clients
+    updateDataReference(totalData, lastUpdateTime); // Pass lastUpdateTime
+    broadcastDataUpdate();
   } catch (error) {
     console.error("❌ Error in initiate function:", error);
   } finally {
@@ -93,15 +85,18 @@ const initiate = async () => {
 
 const startServer = async () => {
   try {
+    // Start WebSocket server with data reference
+    start_ws_server(totalData, lastUpdateTime); // Pass lastUpdateTime
+
+    // Initial data fetch
     await initiate();
 
+    // Schedule periodic data fetch
     const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
-    setInterval(initiate, THREE_HOURS_MS);
+    setInterval(async () => {
+      await initiate();
+    }, THREE_HOURS_MS);
     console.log(`🕒 Scheduled data fetch every 3 hours (${THREE_HOURS_MS} ms)`);
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Express server running on port ${PORT}`);
-    });
   } catch (error) {
     console.error("❌ Failed to start server:", error);
     return;

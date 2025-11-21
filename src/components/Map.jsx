@@ -15,7 +15,8 @@ export default function Map({ onMapMove }) {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const dispatch = useDispatch();
-  const { fireData, status } = useSelector((state) => state.fire);
+  const { fireData, status, connectionStatus, lastUpdated, dataCount } =
+    useSelector((state) => state.fire);
 
   const [selectedStyle, setSelectedStyle] = useState("streets");
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -25,6 +26,30 @@ export default function Map({ onMapMove }) {
     high: true,
   });
   const [selectedFire, setSelectedFire] = useState(null);
+
+  // Format the last update time for display
+  const formatLastUpdateTime = (isoString) => {
+    if (!isoString) return "Never";
+
+    const date = new Date(isoString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60)
+      return `${diffMins} minute${diffMins === 1 ? "" : "s"} ago`;
+    if (diffHours < 24)
+      return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
+
+    // For older updates, show the actual date and time
+    return (
+      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) +
+      " • " +
+      date.toLocaleDateString([], { month: "short", day: "numeric" })
+    );
+  };
 
   const handleFireClick = useCallback((fire) => {
     setSelectedFire(fire);
@@ -284,6 +309,95 @@ export default function Map({ onMapMove }) {
 
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      {/* Combined Connection Status and Last Update Indicator */}
+      {(connectionStatus === "connecting" ||
+        connectionStatus === "connected") && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 10,
+            left: 10,
+            background: connectionStatus === "connected" ? "green" : "orange",
+            color: "white",
+            padding: "8px 12px",
+            borderRadius: "6px",
+            zIndex: 1000,
+            fontSize: "14px",
+            fontWeight: "bold",
+            minWidth: "200px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {connectionStatus === "connecting" ? "🔄" : "✅"}
+            {connectionStatus === "connecting"
+              ? "Connecting..."
+              : "Live Data Connected"}
+          </div>
+
+          {/* Last update time - always show when available */}
+          {lastUpdated && (
+            <div
+              style={{
+                fontSize: "12px",
+                fontWeight: "normal",
+                marginTop: "4px",
+                opacity: 0.9,
+                borderTop: "1px solid rgba(255,255,255,0.3)",
+                paddingTop: "4px",
+              }}
+            >
+              Updated: {formatLastUpdateTime(lastUpdated)}
+            </div>
+          )}
+
+          {/* Data count when connected and has data */}
+          {connectionStatus === "connected" && dataCount > 0 && (
+            <div
+              style={{
+                fontSize: "12px",
+                fontWeight: "normal",
+                opacity: 0.9,
+              }}
+            >
+              Active fires: {dataCount}
+            </div>
+          )}
+        </div>
+      )}
+
+      {connectionStatus === "disconnected" && status === "failed" && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 10,
+            left: 10,
+            background: "red",
+            color: "white",
+            padding: "8px 12px",
+            borderRadius: "6px",
+            zIndex: 1000,
+            fontSize: "14px",
+            fontWeight: "bold",
+            minWidth: "200px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            ❌ Connection failed
+          </div>
+          <div
+            style={{
+              fontSize: "12px",
+              fontWeight: "normal",
+              marginTop: "4px",
+              opacity: 0.9,
+            }}
+          >
+            Retrying...
+          </div>
+        </div>
+      )}
+
       <div className="title">
         <h2
           style={{
