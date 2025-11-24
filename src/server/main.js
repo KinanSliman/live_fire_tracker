@@ -83,7 +83,14 @@ const initiate = async () => {
   }
 };
 
+function keepServerAlive() {
+  setInterval(() => {
+    console.log("WebSocket server alive:", new Date().toISOString());
+  }, 4 * 60 * 1000);
+}
+
 const startServer = async () => {
+  keepServerAlive();
   try {
     // Start WebSocket server with data reference
     start_ws_server(totalData, lastUpdateTime); // Pass lastUpdateTime
