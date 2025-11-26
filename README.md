@@ -1,16 +1,104 @@
-# React + Vite
+# 🌍🔥 Real-Time Wildfire Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A live global wildfire tracking web app powered by NASA FIRMS data, WebSockets, and MapLibre GL (3D) + multiple 2D map tilers.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Overview
 
-## React Compiler
+The **Real-Time Wildfire Tracker** visualizes all wildfires detected worldwide in the past **24 hours**, using NASA’s FIRMS satellite data.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The system includes a **Node.js and WebSocket backend** and a **React + MapLibre GL frontend** with support for multiple 3D/2D map styles.  
+When a user clicks a wildfire marker, the app reverse-geocodes the coordinates to display the country, state, and city using OpenStreetMap’s Nominatim API. Caching is used to avoid repeated lookups.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Key Features
+
+### 🔥 Live NASA FIRMS Wildfire Data
+
+- Server fetches global wildfire activity for the past 24 hours.
+- No database used — results are stored in memory for high performance.
+
+### 📡 Real-time Updates with WebSockets
+
+- Users receive the latest wildfire data instantly when they open the app.
+- Eliminates unnecessary polling.
+
+### 🗺️ Advanced Mapping (3D + 2D)
+
+- **MapLibre GL** for immersive **3D visualization**.
+- Multiple **MapTiler 2D styles** available for user preference.
+- Users can switch map layouts seamlessly.
+
+### 🌏 Reverse Geocoding (with Caching)
+
+- Clicking a wildfire pin displays its nearest city, state/region, and country.
+- Results are cached to minimize external API calls.
+
+---
+
+## 🏗️ Tech Stack
+
+### **Backend**
+
+- Node.js
+- WebSocket (`ws`)
+- NASA FIRMS API
+- In-memory data caching
+
+### **Frontend**
+
+- React.js
+- Redux Toolkit
+- MapLibre GL JS
+- MapTiler
+- SASS/SCSS
+
+## 🧩 Architecture
+
+NASA FIRMS API → Node.js Server → WebSocket → React Frontend → MapLibre / MapTiler
+↘ Reverse Geocode (client-side)
+
+---
+
+## ⚡ Setup Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/KinanSliman/wildfire-tracker.git
+cd wildfire-tracker
+```
+
+### 2. Install dependencies
+
+```bash
+
+cd server
+npm install
+```
+
+### 3. Add environment variables
+
+Create .env file like this:
+
+```bash
+
+VITE_MAPTILER_KEY="your_maptiller_key"
+MAP_KEY="your_nasa_firms_api_key"
+```
+
+### 4. Start server:
+
+```bash
+
+nodemon src/server/main.js
+```
+
+### 5. Start Web App:
+
+```bash
+
+npm run dev
+```
